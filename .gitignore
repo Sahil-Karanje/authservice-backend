@@ -1,0 +1,41 @@
+# Build results
+bin/
+obj/
+
+# Visual Studio cache files
+.vs/
+
+# Rider / Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# NuGet packages
+*.nupkg
+packages/
+
+# Backup & temporary files
+*.bak
+*.tmp
+*.temp
+
+# Publish output
+publish/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (VERY IMPORTANT)
+appsettings.Development.json
+
+# Node modules (if frontend later added)
+node_modules/
