@@ -14,9 +14,8 @@ builder.Services.AddSwaggerGen();
 
 // Database Connections
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options.UseNpgsql(
+    builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
 //jwt secrets
@@ -24,10 +23,10 @@ var jwtKey = builder.Configuration["Jwt:Key"];
 var issuer = builder.Configuration["Jwt:Issuer"];
 var audience = builder.Configuration["Jwt:Audience"];
 
-// check if jwtkey is not null
-if (string.IsNullOrEmpty(jwtKey))
+// check if jwtkey or audience is not null
+if (string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience))
 {
-    throw new Exception("JWT Key is not configured.");
+    throw new Exception("JWT Issuer or Audience not configured.");
 }
 
 
@@ -62,6 +61,13 @@ if (!string.IsNullOrEmpty(port))
 
 var app = builder.Build();
 
+// will create tables in database
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 // home api
 app.MapGet("/", () => "Hello World!");
 
@@ -72,7 +78,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
