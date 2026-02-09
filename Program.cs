@@ -24,6 +24,13 @@ var jwtKey = builder.Configuration["Jwt:Key"];
 var issuer = builder.Configuration["Jwt:Issuer"];
 var audience = builder.Configuration["Jwt:Audience"];
 
+// check if jwtkey is not null
+if (string.IsNullOrEmpty(jwtKey))
+{
+    throw new Exception("JWT Key is not configured.");
+}
+
+
 //configuring JWT authentication
 builder.Services.AddAuthentication(options =>
 {
@@ -46,8 +53,12 @@ builder.Services.AddAuthentication(options =>
 });
 
 //for production
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+var port = Environment.GetEnvironmentVariable("PORT");
+
+if (!string.IsNullOrEmpty(port))
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
 
 var app = builder.Build();
 
