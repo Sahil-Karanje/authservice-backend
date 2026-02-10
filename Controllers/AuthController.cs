@@ -49,7 +49,8 @@ namespace AuthService.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok("User Registered Successfully");
+            return Ok(new { message = "User Registered Successfully" });
+
         }
 
         //login
@@ -138,7 +139,7 @@ namespace AuthService.Controllers
         [HttpGet("admin")]
         public IActionResult AdminOnly()
         {
-            return Ok("Admin access granted");
+            return Ok(new {message="admin here"});
         }
 
     }
