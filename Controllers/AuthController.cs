@@ -99,7 +99,7 @@ namespace AuthService.Controllers
                 Expires = DateTime.UtcNow.AddDays(1)
             });
 
-            return Ok(new { message = "Login Successfil"});
+            return Ok(new { message = "Login Successfull"});
         }
 
         // logout
