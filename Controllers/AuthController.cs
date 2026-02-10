@@ -90,7 +90,29 @@ namespace AuthService.Controllers
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return Ok(new { token = jwt });
+            Response.Cookies.Append("access_token", jwt, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(1)
+            });
+
+            return Ok(new { message = "Login Successfil"});
+        }
+
+        // logout
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("access_token", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None
+            });
+
+            return Ok(new { message = "Logged out successfully" });
         }
 
         [Authorize]
