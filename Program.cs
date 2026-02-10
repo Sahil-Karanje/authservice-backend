@@ -66,16 +66,17 @@ builder.Services.AddAuthentication(options =>
 });
 
 //cors configuration
+var allowedOrigins = builder.Configuration
+    .GetSection("AllowedOrigins")
+    .Get<string[]>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy =>
         {
             policy
-                .WithOrigins(
-                    "http://localhost:5173", // local frontend
-                    "https://your-frontend.vercel.app" // production frontend
-                )
+                .WithOrigins(allowedOrigins!)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();

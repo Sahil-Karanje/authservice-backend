@@ -117,10 +117,21 @@ namespace AuthService.Controllers
 
         [Authorize]
         [HttpGet("me")]
-        public IActionResult GetCurrentUser()
+        public async Task<IActionResult> GetCurrentUser()
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
-            return Ok($"Authenticated user: {email}");
+
+            var user = await _context.Users
+                .Where(u => u.Email == email)
+                .Select(u => new
+                {
+                    u.Name,
+                    u.Email,
+                    u.Role
+                })
+                .FirstOrDefaultAsync();
+
+            return Ok(user);
         }
 
         [Authorize(Roles = "Admin")]
